@@ -1,0 +1,39 @@
+{
+    "name": "@itero/itero-pdf-creator",
+    "version": "1.0.0",
+    "description": "launches rx-app to create pdf from rx",
+    "main": "index.js",
+    "scripts": {
+      "test": "set NODE_ENV=testing&&jest",
+      "app:start-dev": "node ./src/index.js",
+      "app:start": "set NODE_ENV=production&&node ./src/index.js",
+      "app:build": "webpack --config prod.config.js",
+      "build": "webpack --mode=production --node-env=production",
+      "build:dev": "webpack --mode=development",
+      "build:prod": "webpack --mode=production --node-env=production",
+      "watch": "webpack --watch",
+      "serve": "webpack serve"
+    },
+    "author": "Align Technology -> iTero -> 3D-Spiders",
+    "license": "SEE LICENSE IN LICENSE.md",
+    "dependencies": {
+      "@aws-sdk/client-cloudwatch-logs": "^3.85.0",
+      "browserify": "^17.0.0",
+      "browserify-zlib": "^0.2.0",
+      "cheerio": "^1.0.0-rc.10",
+      "chrome-aws-lambda": "^10.1.0",
+      "chrome-har": "^0.12.0",
+      "crypto-browserify": "^3.12.0",
+      "express": "^4.17.3",
+      "fs": "0.0.1-security",
+      "puppeteer": "^13.6.0",
+      "puppeteer-core": "^10.1.0",
+      "regenerator-runtime": "^0.13.9",
+      "winston": "^3.7.2",
+      "winston-cloudwatch": "^6.0.0"
+    },
+    "devDependencies": {
+
+    }
+  }
+  
