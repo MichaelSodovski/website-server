@@ -1,18 +1,21 @@
 const { runSQL } = require('../services/db.service')
-
-const getTestFunction = (req, res) => {
-    return res.send("test get function");
-};
+const userService = require('../services/user.service');
 
 const getUSers = async (req, res) => {
-    const sqlQUery = "SELECT * FROM users_table";
-    const users = await runSQL(sqlQUery).then(result => {
+    const sqlQUery = "SELECT * FROM users";
+    await runSQL(sqlQUery).then(result => {
         return res.send(result);
     })
 };
 
-const saveUsers = (req, res) => {
-    return res.send(req.body);
+const addUser = async (req, res) => {
+    try {
+        const user = req.body;
+        const addedUser = await userService.add(user);
+        return res.json(addedUser)
+    } catch (err) {
+        console.log(err);
+    }
 }
 
-module.exports = { getTestFunction, getUSers, saveUsers };
+module.exports = { getUSers, addUser };

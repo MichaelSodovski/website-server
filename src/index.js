@@ -4,7 +4,7 @@ const cors = require('cors')
 
 const app = express();
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true })); // TAKES ALL THE URL ENCODED DATA AND PASSES IN OBJECT THAT WE CAN USE ON THE REQUEST OBJECT 
 app.set("port", process.env.PORT || 3100);
 app.use(express.static("src"));
 

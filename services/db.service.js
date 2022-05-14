@@ -15,14 +15,22 @@ connection.connect(err => {
 
 const runSQL = (sqlCommand) => {
     return new Promise((resolve, reject) => {
-        connection.query(sqlCommand, function (error, results) {
+        connection.query(sqlCommand, (error, results) => {
             if (error) reject(error);
             else resolve(results);
         });
     })
 }
 
-// connection.end();
+const insertIntoTable = (expression, data) => {
+    return new Promise((resolve, reject) => {
+        connection.query(expression, data, (error, results) => {
+            if (error) reject(error);
+            else resolve(results);
+        });
+    })
+}
+
 module.exports = {
-    runSQL
+    runSQL, insertIntoTable
 }

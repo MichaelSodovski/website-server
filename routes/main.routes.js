@@ -4,11 +4,9 @@ const router = express.Router();
 
 const mainController = require("../controllers/main.controller");
 
-router.post("/saveUsers", mainController.saveUsers);
-
-router.get("/", mainController.getTestFunction);
+router.post("/adduser", mainController.addUser);
 
 router.get("/getUsers", mainController.getUSers);
 
-
 module.exports = router;
+
