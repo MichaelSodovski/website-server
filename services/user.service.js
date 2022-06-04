@@ -23,6 +23,7 @@ const userDelete = async (userToDelete) => {
 }
 const getUserByCredentials = async (userCredentials) => {
     try {
+        debugger;
         const username = userCredentials.userName;
         const passWord = userCredentials.passWord;
         const expression = `SELECT * FROM users WHERE userName='${username}' AND passWord='${passWord}'`;

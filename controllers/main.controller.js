@@ -30,9 +30,12 @@ const deleteUser = async (req, res) => {
 
 const login = async (req, res) => {
     try {
+        
         const userCredentials = req.body;
         const validatedUser = await userService.getUserByCredentials(userCredentials);
-        return res.json(validatedUser);
+        debugger;
+        res.cookie('Authorization', `bearer '${validatedUser[0].jwtToken}'`);
+        return res.send('ok');
     } catch (err) {
         console.log(err);
     }
