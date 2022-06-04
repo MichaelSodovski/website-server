@@ -13,18 +13,9 @@ connection.connect(err => {
     console.log('connected to SQL server');
 })
 
-const runSQL = (sqlCommand) => {
+const runSqlQueryOnDB = (expression) => {
     return new Promise((resolve, reject) => {
-        connection.query(sqlCommand, (error, results) => {
-            if (error) reject(error);
-            else resolve(results);
-        });
-    })
-}
-
-const insertIntoTable = (expression, data) => {
-    return new Promise((resolve, reject) => {
-        connection.query(expression, data, (error, results) => {
+        connection.query(expression, (error, results) => {
             if (error) reject(error);
             else resolve(results);
         });
@@ -32,5 +23,5 @@ const insertIntoTable = (expression, data) => {
 }
 
 module.exports = {
-    runSQL, insertIntoTable
+    runSqlQueryOnDB
 }
