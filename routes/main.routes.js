@@ -10,7 +10,7 @@ router.post("/adduser", mainController.addUser);
 
 router.post("/deleteUser", mainController.deleteUser);
 
-router.post("/validateUser", mainController.validateUser);
+router.post("/login", mainController.login);
 
 router.post("/recoverPassword", mainController.recoverPassword);
 

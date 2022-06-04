@@ -1,16 +1,18 @@
 const dbService = require('./db.service');
 const jwt = require("jsonwebtoken");
+const res = require('express/lib/response');
+const dotenv = require("dotenv").config();
 
 const addUser = async (user) => {
     try {
+        // add logic to prevent many users to have the same username
         const expression = `INSERT INTO users SET ?`
-        const addedUser = await dbService.runSqlQueryOnDB(expression, user);
+        const addedUser = await dbService.runSqlQueryOnDBAddUser(expression, user);
         return addedUser
     } catch (err) {
         console.log(err);
     }
 }
-
 const userDelete = async (userToDelete) => {
     try {
         const expression = `DELETE FROM users WHERE id = '${userToDelete}'`;
@@ -19,26 +21,26 @@ const userDelete = async (userToDelete) => {
         console.log(err);
     }
 }
-
-const validateUserByCredentials = async (userCredentials) => {
+const getUserByCredentials = async (userCredentials) => {
     try {
         const username = userCredentials.userName;
-        const password = userCredentials.passWord;
-        const expression = `SELECT * FROM users WHERE userName = '${username}'`;
-        const returnedUserByUsername = await dbService.runSqlQueryOnDB(expression)
-        if (returnedUserByUsername !== null) {
-            const expression = `SELECT * FROM users WHERE userName='${username}' AND passWord='${password}'`;
-            const returnedUser = await dbService.runSqlQueryOnDB(expression);
+        const passWord = userCredentials.passWord;
+        const expression = `SELECT * FROM users WHERE userName='${username}' AND passWord='${passWord}'`;
+        const user = await dbService.runSqlQueryOnDB(expression)
+        if (user.length === 0) {
+            return new Error('no user with this name or password');
+        }
+        else {
             let jwtSecretKey = process.env.JWT_KEY;
             let data = {
                 time: Date(),
-                userId: returnedUser.userId,
+                userId: user[0].id,
             }
             const token = jwt.sign(data, jwtSecretKey);
-            returnedUser.append(token)
-            console.log("🚀 ~ file: user.service.js ~ line 29 ~ validateUserByCredentials ~ returnedUser", returnedUser)
+            user[0].jwtToken = token;
+            user[0].passWord = null;
         }
-        else return new Error('no user with this name');
+        return user;
     } catch (err) {
         console.log(err);
     }
@@ -56,7 +58,7 @@ const checkIfUserEmailExists = async (userEmail) => {
 
 module.exports = {
     addUser,
-    validateUserByCredentials,
+    getUserByCredentials,
     checkIfUserEmailExists,
     userDelete
 }

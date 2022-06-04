@@ -13,6 +13,15 @@ connection.connect(err => {
     console.log('connected to SQL server');
 })
 
+const runSqlQueryOnDBAddUser = (expression, data) => {
+    return new Promise((resolve, reject) => {
+        connection.query(expression, data, (error, results) => {
+            if (error) reject(error);
+            else resolve(results);
+        });
+    })
+}
+
 const runSqlQueryOnDB = (expression) => {
     return new Promise((resolve, reject) => {
         connection.query(expression, (error, results) => {
@@ -23,5 +32,6 @@ const runSqlQueryOnDB = (expression) => {
 }
 
 module.exports = {
-    runSqlQueryOnDB
+    runSqlQueryOnDB,
+    runSqlQueryOnDBAddUser
 }

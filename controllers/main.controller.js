@@ -28,16 +28,17 @@ const deleteUser = async (req, res) => {
     }
 }
 
-const validateUser = async (req, res) => {
+const login = async (req, res) => {
     try {
         const userCredentials = req.body;
-        const validatedUser = await userService.validateUserByCredentials(userCredentials);
-        return res.json(validatedUser)
+        const validatedUser = await userService.getUserByCredentials(userCredentials);
+        return res.json(validatedUser);
     } catch (err) {
         console.log(err);
     }
 }
 
+// for that to work i need to build logic for updating an existing user and this function will redirect to it
 const recoverPassword = async (req, res) => {
     try {
         const userEmail = req.body;
@@ -48,5 +49,11 @@ const recoverPassword = async (req, res) => {
     }
 }
 
-module.exports = { getUSers, addUser, validateUser, recoverPassword, deleteUser }
+module.exports = {
+    getUSers,
+    addUser,
+    login,
+    recoverPassword,
+    deleteUser
+}
 
