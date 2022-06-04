@@ -13,7 +13,7 @@ const addUser = async (user) => {
 
 const userDelete = async (userToDelete) => {
     try {
-        const expression = `DELETE FROM users WHERE id = '${userToDelete.userId}'`;
+        const expression = `DELETE FROM users WHERE id = '${userToDelete}'`;
         await dbService.runSqlQueryOnDB(expression);
     } catch (err) {
         console.log(err);

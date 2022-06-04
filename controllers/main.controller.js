@@ -20,9 +20,9 @@ const addUser = async (req, res) => {
 
 const deleteUser = async (req, res) => {
     try {
-        const userToDelete = req.body;
-        const deletedUser = await userService.userDelete(userToDelete);
-        return res.end(`User '${userToDelete.userId}' has been deleted`)
+        const userToDelete = req.body.userId;
+        await userService.userDelete(userToDelete);
+        return res.end(`User '${userToDelete}' has been deleted`)
     } catch {
         console.log(err);
     }
