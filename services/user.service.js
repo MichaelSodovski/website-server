@@ -1,7 +1,7 @@
 const dbService = require('./db.service');
 const jwt = require("jsonwebtoken");
 const res = require('express/lib/response');
-const dotenv = require("dotenv").config();
+require("dotenv").config();
 
 const addUser = async (user) => {
     try {
@@ -23,25 +23,32 @@ const userDelete = async (userToDelete) => {
 }
 const getUserByCredentials = async (userCredentials) => {
     try {
-        debugger;
-        const username = userCredentials.userName;
-        const passWord = userCredentials.passWord;
-        const expression = `SELECT * FROM users WHERE userName='${username}' AND passWord='${passWord}'`;
+        const { userName, passWord } = userCredentials;
+        const expression = `SELECT * FROM users WHERE userName='${userName}' AND passWord='${passWord}'`;
         const user = await dbService.runSqlQueryOnDB(expression)
-        if (user.length === 0) {
+        if (user[0].length === 0) {
             return new Error('no user with this name or password');
         }
         else {
-            let jwtSecretKey = process.env.JWT_KEY;
-            let data = {
+            const { id } = user[0];
+            //generate jwt token
+            let jwtSecretKey = process.env.ACCESS_TOKEN_SECRET;
+            let dataJwt = {
                 time: Date(),
-                userId: user[0].id,
+                userId: id,
             }
-            const token = jwt.sign(data, jwtSecretKey);
-            user[0].jwtToken = token;
-            user[0].passWord = null;
+            const jwtToken = jwt.sign(dataJwt, jwtSecretKey, { expiresIn: '60m' });
+            // generate refresh token 
+            let refreshTokenSecretKey = process.env.REFRESH_TOKEN_SECRET;
+            let dataRefresh = {
+                time: Date(),
+                userId: id,
+            }
+            const refreshToken = jwt.sign(dataRefresh, refreshTokenSecretKey)
+            //pack tokens together
+            const tokens = {jwtToken: jwtToken, refreshToken: refreshToken}
+            return tokens;
         }
-        return user;
     } catch (err) {
         console.log(err);
     }

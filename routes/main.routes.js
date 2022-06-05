@@ -8,9 +8,11 @@ router.get("/getUsers", mainController.getUSers);
 
 router.post("/adduser", mainController.addUser);
 
-router.post("/deleteUser", mainController.deleteUser);
+router.post("/deleteUser", mainController.authenticateToken, mainController.deleteUser);
 
-router.post("/login", mainController.login);
+router.post("/login", mainController.login); // post is more suitable because were creating something (the token) on the way back. 
+
+router.delete("/logOut", mainController.logOut);
 
 router.post("/recoverPassword", mainController.recoverPassword);
 

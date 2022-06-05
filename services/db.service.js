@@ -7,7 +7,6 @@ var connection = mysql.createConnection({
     database: 'site_db',
     insecureAuth: true
 });
-
 connection.connect(err => {
     if (err) throw new Error('mySql failed connection');
     console.log('connected to SQL server');
@@ -21,7 +20,6 @@ const runSqlQueryOnDBAddUser = (expression, data) => {
         });
     })
 }
-
 const runSqlQueryOnDB = (expression) => {
     return new Promise((resolve, reject) => {
         connection.query(expression, (error, results) => {
