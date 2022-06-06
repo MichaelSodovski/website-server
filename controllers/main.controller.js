@@ -49,7 +49,6 @@ const login = async (req, res) => {
 }
 
 const authenticateToken = async (req, res, next) => {
-    debugger;
     const authHeader = req.headers['authorization']; // get the token from the request headers 
     const token = authHeader && authHeader.split(' ')[1]; // filter out the bearer part and keep the token itself
     if (token == null) return res.sendStatus(401); // send back unauthorized if token is missing 
@@ -61,9 +60,41 @@ const authenticateToken = async (req, res, next) => {
     });
 }
 
+const refreshToken = (req, res) => {
+    const token = req.cookies.token
+    let payload
+    if (!token) {
+        return res.status(401).end() // unauthorized response status.
+    }
+
+    try {
+        payload = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
+    } catch (e) {
+        if (e instanceof jwt.JsonWebTokenError) {
+            return res.status(401).end() // unauthorized response status.
+        }
+        return res.status(400).end() // Bad Request response status.
+    }
+    // We ensure that a new token is not issued until enough time has elapsed.
+    // In this case, a new token will only be issued if the old token is within.
+    // 30 seconds of expiry. Otherwise, return a bad request status.
+    const nowUnixSeconds = Math.round(Number(new Date()) / 1000)
+    if (payload.exp - nowUnixSeconds > 30) {
+        return res.status(400).end() // Bad Request response status.
+    }
+    // Now, create a new token for the current user, with a renewed expiration time.
+    const newToken = jwt.sign({ username: payload.username }, process.env.ACCESS_TOKEN_SECRET, {
+        algorithm: "HS256",
+        expiresIn: '60m',
+    })
+    // Set the new token as the user's 'authorization' cookie.
+    res.cookie('authorization', newToken, { maxAge: '60m' })
+    res.end()
+}
+
 const logOut = async (req, res) => {
     try {
-        res.cookie('Authorization', "", {
+        res.cookie('authorization', "", {
             maxAge: 0,
             httpOnly: true
         });
@@ -92,6 +123,7 @@ module.exports = {
     recoverPassword,
     deleteUser,
     logOut,
-    authenticateToken
+    authenticateToken,
+    refreshToken
 }
 

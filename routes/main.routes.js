@@ -14,6 +14,8 @@ router.post("/login", mainController.login); // post is more suitable because we
 
 router.delete("/logOut", mainController.logOut);
 
+router.post("/refreshToken", mainController.refreshToken)
+
 router.post("/recoverPassword", mainController.recoverPassword);
 
 module.exports = router;

@@ -37,7 +37,10 @@ const getUserByCredentials = async (userCredentials) => {
                 time: Date(),
                 userId: id,
             }
-            const jwtToken = jwt.sign(dataJwt, jwtSecretKey, { expiresIn: '60m' });
+            const jwtToken = jwt.sign(dataJwt, jwtSecretKey, {
+                algorithm: "HS256",
+                expiresIn: '60m'
+            });
             // generate refresh token 
             let refreshTokenSecretKey = process.env.REFRESH_TOKEN_SECRET;
             let dataRefresh = {
@@ -46,7 +49,7 @@ const getUserByCredentials = async (userCredentials) => {
             }
             const refreshToken = jwt.sign(dataRefresh, refreshTokenSecretKey)
             //pack tokens together
-            const tokens = {jwtToken: jwtToken, refreshToken: refreshToken}
+            const tokens = { jwtToken: jwtToken, refreshToken: refreshToken }
             return tokens;
         }
     } catch (err) {
