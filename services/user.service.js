@@ -67,10 +67,21 @@ const checkIfUserEmailExists = async (userEmail) => {
     }
 }
 
+const updateUserPassWord = async (userToUpdate) => {
+    try {
+        const expression = `UPDATE site_db.users SET passWord = "${userToUpdate.passWord}" WHERE id = "${userToUpdate.id}"`;
+        const updatedUser = await dbService.runSqlQueryOnDB(expression);
+        return updatedUser;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
 module.exports = {
     addUser,
     getUserByCredentials,
     checkIfUserEmailExists,
-    userDelete
+    userDelete,
+    updateUserPassWord
 }
 

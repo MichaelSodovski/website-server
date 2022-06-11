@@ -2,6 +2,9 @@ const { runSqlQueryOnDB } = require('../services/db.service')
 const userService = require('../services/user.service');
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
+const nodemailer = require('nodemailer');
+let verCode = null;
+let user = null;
 
 const getUSers = async (req, res) => {
     const sqlQUery = "SELECT * FROM users";
@@ -61,16 +64,15 @@ const authenticateToken = async (req, res, next) => {
 }
 
 const refreshToken = (req, res) => {
-    const token = req.cookies.token
-    let payload
-    if (!token) {
-        return res.status(401).end() // unauthorized response status.
-    }
-
+    const authHeader = req.headers['authorization']; // get the token from the request headers 
+    const token = authHeader && authHeader.split(' ')[1]; // filter out the bearer part and keep the token itself
+    let payload = null;
+    if (!token) return res.status(401).end() // unauthorized response status.
     try {
         payload = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
     } catch (e) {
         if (e instanceof jwt.JsonWebTokenError) {
+            // res.status(401).send("not authorized.");
             return res.status(401).end() // unauthorized response status.
         }
         return res.status(400).end() // Bad Request response status.
@@ -108,13 +110,68 @@ const logOut = async (req, res) => {
 // for that to work i need to build logic for updating an existing user and this function will redirect to it
 const recoverPassword = async (req, res) => {
     try {
-        const userEmail = req.body;
+        const userEmail = req.body.email;
         const userByEmail = await userService.checkIfUserEmailExists(userEmail);
-        return res.json(userByEmail);
+        user = userByEmail;
+        const transporter = nodemailer.createTransport({
+            host: 'smtp.gmail.com',
+            port: 465,
+            secure: true,
+            service: 'gmail',
+            auth: {
+                user: process.env.serverEmail,
+                pass: process.env.serverEmailPassword
+            }
+        })
+
+        const emailCode = Math.floor(Math.random() * 90000) + 10000;
+        debugger;
+        verCode = emailCode;
+
+        const mailOptions = {
+            from: process.env.serverEmail,
+            to: userByEmail[0].email,
+            subject: 'Confirm Your Email Address',
+            text: "Use the following 5 digit code to confirm your email address \n" + emailCode.toString()
+        };
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.log(error);
+            } else {
+                console.log('Email sent: ' + info.response);
+            }
+        });
+        res.redirect("/emailVerification");
     } catch (err) {
         console.log(err);
     }
 }
+
+const verifyCode = async (req, res) => {
+    try {
+        const code = req.body.verificationCode;
+        if (Number(code) === verCode) {
+            res.redirect("/passwordUpdate");
+        }
+        else {
+            res.sentStatus(401).end("verification code is incorrect.");
+        }
+
+    } catch (err) {
+        console.log(err);
+    }
+};
+
+const updatePassword = async (req, res) => {
+    try {
+        let userToUpdate = user[0];
+        userToUpdate.passWord = req.body.newPassword;
+        await userService.updateUserPassWord(userToUpdate);
+        res.redirect("/signin");
+    } catch (err) {
+        console.log(err);
+    }
+};
 
 module.exports = {
     getUSers,
@@ -124,6 +181,8 @@ module.exports = {
     deleteUser,
     logOut,
     authenticateToken,
-    refreshToken
+    refreshToken,
+    verifyCode,
+    updatePassword
 }
 
