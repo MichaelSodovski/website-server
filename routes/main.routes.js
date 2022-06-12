@@ -22,5 +22,7 @@ router.post("/verifyCode", mainController.verifyCode);
 
 router.post("/updatePassword", mainController.updatePassword);
 
+router.post("/recoverUserName", mainController.recoverUserName);
+
 module.exports = router;
 

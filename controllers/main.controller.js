@@ -125,7 +125,6 @@ const recoverPassword = async (req, res) => {
         })
 
         const emailCode = Math.floor(Math.random() * 90000) + 10000;
-        debugger;
         verCode = emailCode;
 
         const mailOptions = {
@@ -150,13 +149,8 @@ const recoverPassword = async (req, res) => {
 const verifyCode = async (req, res) => {
     try {
         const code = req.body.verificationCode;
-        if (Number(code) === verCode) {
-            res.redirect("/passwordUpdate");
-        }
-        else {
-            res.sentStatus(401).end("verification code is incorrect.");
-        }
-
+        if (Number(code) === verCode) res.redirect("/passwordUpdate");
+        else res.status(401).end("verification code is incorrect.");
     } catch (err) {
         console.log(err);
     }
@@ -173,6 +167,40 @@ const updatePassword = async (req, res) => {
     }
 };
 
+const recoverUserName = async (req, res) => {
+    try {
+        debugger;
+        const userEmail = req.body.email;
+        const userByEmail = await userService.checkIfUserEmailExists(userEmail);
+        const transporter = nodemailer.createTransport({
+            host: 'smtp.gmail.com',
+            port: 465,
+            secure: true,
+            service: 'gmail',
+            auth: {
+                user: process.env.serverEmail,
+                pass: process.env.serverEmailPassword
+            }
+        })
+        const mailOptions = {
+            from: process.env.serverEmail,
+            to: userByEmail[0].email,
+            subject: 'user name recovery',
+            text: "your user name by the email you provided: \n" + userByEmail[0].userName
+        };
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.log(error);
+            } else {
+                console.log('Email sent: ' + info.response);
+            }
+        });
+        res.redirect("/signin");
+    } catch (err) {
+        console.log(err);
+    }
+}
+
 module.exports = {
     getUSers,
     addUser,
@@ -183,6 +211,7 @@ module.exports = {
     authenticateToken,
     refreshToken,
     verifyCode,
-    updatePassword
+    updatePassword,
+    recoverUserName
 }
 
