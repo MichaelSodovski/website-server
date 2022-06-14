@@ -23,11 +23,12 @@ const userDelete = async (userToDelete) => {
 }
 const getUserByCredentials = async (userCredentials) => {
     try {
+        debugger;
         const { userName, passWord } = userCredentials;
         const expression = `SELECT * FROM users WHERE userName='${userName}' AND passWord='${passWord}'`;
         const user = await dbService.runSqlQueryOnDB(expression)
-        if (user[0].length === 0) {
-            return new Error('no user with this name or password');
+        if (user.length === 0) {
+            return res.status(301).end("a user with those credentials don't exist.");
         }
         else {
             const { id } = user[0];
@@ -67,10 +68,21 @@ const checkIfUserEmailExists = async (userEmail) => {
     }
 }
 
+const updateUserPassWord = async (userToUpdate) => {
+    try {
+        const expression = `UPDATE site_db.users SET passWord = "${userToUpdate.passWord}" WHERE id = "${userToUpdate.id}"`;
+        const updatedUser = await dbService.runSqlQueryOnDB(expression);
+        return updatedUser;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
 module.exports = {
     addUser,
     getUserByCredentials,
     checkIfUserEmailExists,
-    userDelete
+    userDelete,
+    updateUserPassWord
 }
 
