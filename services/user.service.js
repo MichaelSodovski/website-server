@@ -23,7 +23,6 @@ const userDelete = async (userToDelete) => {
 }
 const getUserByCredentials = async (userCredentials) => {
     try {
-        debugger;
         const { userName, passWord } = userCredentials;
         const expression = `SELECT * FROM users WHERE userName='${userName}' AND passWord='${passWord}'`;
         const user = await dbService.runSqlQueryOnDB(expression)
