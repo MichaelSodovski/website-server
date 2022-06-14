@@ -18,5 +18,11 @@ router.post("/refreshToken", mainController.refreshToken)
 
 router.post("/recoverPassword", mainController.recoverPassword);
 
+router.post("/verifyCode", mainController.verifyCode);
+
+router.post("/updatePassword", mainController.updatePassword);
+
+router.post("/recoverUserName", mainController.recoverUserName);
+
 module.exports = router;
 
