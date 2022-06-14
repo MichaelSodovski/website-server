@@ -1,28 +1,32 @@
 const express = require("express");
-
 const router = express.Router();
+// const mainController = require("../controllers/main.controller");
+const usersController = require("../controllers/users.controller");
+const authController = require("../controllers/auth.controller");
+const articlesController = require("../controllers/articles.controller");
 
-const mainController = require("../controllers/main.controller");
+router.get("/getUsers", usersController.getUSers);
 
-router.get("/getUsers", mainController.getUSers);
+router.post("/adduser", usersController.addUser);
 
-router.post("/adduser", mainController.addUser);
+router.post("/deleteUser", authController.authenticateToken, usersController.deleteUser);
 
-router.post("/deleteUser", mainController.authenticateToken, mainController.deleteUser);
+router.post("/login", authController.login); // post is more suitable because were creating something (the token) on the way back. 
 
-router.post("/login", mainController.login); // post is more suitable because were creating something (the token) on the way back. 
+router.delete("/logOut", authController.logOut);
 
-router.delete("/logOut", mainController.logOut);
+router.post("/refreshToken", authController.refreshToken);
 
-router.post("/refreshToken", mainController.refreshToken)
+router.post("/recoverPassword", authController.recoverPassword);
 
-router.post("/recoverPassword", mainController.recoverPassword);
+router.post("/verifyCode", authController.verifyCode);
 
-router.post("/verifyCode", mainController.verifyCode);
+router.post("/updatePassword", authController.updatePassword);
 
-router.post("/updatePassword", mainController.updatePassword);
+router.post("/recoverUserName", authController.recoverUserName);
 
-router.post("/recoverUserName", mainController.recoverUserName);
+router.get("/getArticles", authController.authenticateToken, articlesController.getArticles);
+
 
 module.exports = router;
 
