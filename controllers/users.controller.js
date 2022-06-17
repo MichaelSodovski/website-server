@@ -39,6 +39,16 @@ const updateUser = async (req, res) => {
     }
 }
 
+// const updateUser = async (req, res) => {
+//     try {
+//         const userToUpdate = req.body;
+//         await userService.updateUser(userToUpdate);
+//         return res.end(`User '${userToUpdate.userId}' has been updated.`);
+//     } catch (err) {
+//         console.log(err);
+//     }
+// }
+
 
 
 module.exports = {
