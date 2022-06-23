@@ -13,6 +13,7 @@ const addUser = async (user) => {
         console.log(err);
     }
 }
+
 const userDelete = async (userToDelete) => {
     try {
         const expression = `DELETE FROM users WHERE id = '${userToDelete}'`;
@@ -21,11 +22,11 @@ const userDelete = async (userToDelete) => {
         console.log(err);
     }
 }
+
 const getUserByCredentials = async (userCredentials) => {
     try {
-        debugger;
-        const { userName, passWord } = userCredentials;
-        const expression = `SELECT * FROM users WHERE userName='${userName}' AND passWord='${passWord}'`;
+        const { UserName, PassWord } = userCredentials;
+        const expression = `SELECT * FROM users WHERE userName='${UserName}' AND passWord='${PassWord}'`;
         const user = await dbService.runSqlQueryOnDB(expression)
         const userId = user[0];
         if (!userId) {

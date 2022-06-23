@@ -2,7 +2,6 @@ const userService = require('../services/user.service');
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const nodemailer = require('nodemailer');
-
 let verCode = null;
 let user = null;
 
@@ -10,10 +9,10 @@ const login = async (req, res) => {
     try {
         const userCredentials = req.body;
         const tokens = await userService.getUserByCredentials(userCredentials);
-
         if (!tokens) {
-            return res.status(401).send({ message: 'No user Found' });
+            return res.status(401).send({ message: 'User not found. please check youre credentials..' });
         }
+        
         res.cookie('Authorization', `'${'Bearer'}' + '${' '}' + '${tokens.jwtToken}'`, {
             maxAge: 30000,
             httpOnly: true
@@ -22,7 +21,7 @@ const login = async (req, res) => {
             maxAge: 30000,
             httpOnly: true
         });
-        res.redirect("/home");
+        return res.status(200).send({ message: 'go ahead' });
     } catch (err) {
         console.log(err);
     }
