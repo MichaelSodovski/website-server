@@ -2,18 +2,11 @@ const http = require("http");
 const express = require("express");
 const cors = require('cors'); // for cors handling.
 
-var bodyParser = require('body-parser');
-var multer = require('multer');
-var upload = multer();
-
 const app = express(); // calling the express. 
 app.use(express.json()); // this is to accept data in json format.
 app.use(express.urlencoded({ extended: true })); // TAKES ALL THE URL ENCODED DATA AND PASSES IN OBJECT THAT WE CAN USE ON THE REQUEST OBJECT.
 app.set("port", process.env.PORT || 3100); // setting the server to run on a specific port. 
 app.use(express.static("src"));
-
-app.use(upload.array());
-app.use(express.static('public'));
 
 const server = http.createServer(app);
 const routes = require("../routes/main.routes");
