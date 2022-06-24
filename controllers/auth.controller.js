@@ -12,16 +12,7 @@ const login = async (req, res) => {
         if (!tokens) {
             return res.status(401).send({ message: 'User not found. please check youre credentials..' });
         }
-        
-        res.cookie('Authorization', `'${'Bearer'}' + '${' '}' + '${tokens.jwtToken}'`, {
-            maxAge: 30000,
-            httpOnly: true
-        });
-        res.cookie('Refresh', `'${tokens.refreshToken}'`, {
-            maxAge: 30000,
-            httpOnly: true
-        });
-        return res.status(200).send({ message: 'go ahead' });
+        return res.status(200).send({ tokens: tokens });
     } catch (err) {
         console.log(err);
     }

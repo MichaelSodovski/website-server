@@ -1,7 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const multiparty = require('multiparty');
-// const mainController = require("../controllers/main.controller");
 const usersController = require("../controllers/users.controller");
 const authController = require("../controllers/auth.controller");
 const articlesController = require("../controllers/articles.controller");
@@ -20,7 +18,6 @@ router.post("/updatePassword", redirectionController.redirectToPassSucceesUpdate
 router.post("/recoverUserName", authController.recoverUserName);
 
 router.get("/getArticles", authController.authenticateToken, articlesController.getArticles);
-
 
 module.exports = router;
 
