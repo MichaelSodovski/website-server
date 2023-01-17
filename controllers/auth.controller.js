@@ -17,7 +17,7 @@ const login = async (req, res) => {
             maxAge: 30000,
             httpOnly: true
         });
-        res.sendStatus(200); // status ok
+        res.redirect("/home"); // status ok
     } catch (err) {
         console.log(err);
     }
@@ -166,7 +166,7 @@ const recoverUserName = async (req, res) => {
                 console.log('Email sent: ' + info.response);
             }
         });
-        res.redirect("/signin");
+        res.redirect("/emailSent");
     } catch (err) {
         console.log(err);
     }
