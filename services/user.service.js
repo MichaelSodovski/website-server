@@ -23,8 +23,8 @@ const userDelete = async (userToDelete) => {
 }
 const getUserByCredentials = async (userCredentials) => {
     try {
-        const { userName, passWord } = userCredentials;
-        const expression = `SELECT * FROM users WHERE userName='${userName}' AND passWord='${passWord}'`;
+        const { UserName, PassWord } = userCredentials;
+        const expression = `SELECT * FROM users WHERE userName='${UserName}' AND passWord='${PassWord}'`;
         const user = await dbService.runSqlQueryOnDB(expression)
         if (user.length === 0) {
             return res.status(301).end("a user with those credentials don't exist.");

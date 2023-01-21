@@ -46,6 +46,6 @@ module.exports = {
     addUser,
     deleteUser,
     updateUser,
-    redirectToSentMail,
-    redirectToPassSucceesUpdate
+    // redirectToSentMail,
+    // redirectToPassSucceesUpdate
 }
