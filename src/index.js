@@ -1,6 +1,7 @@
 const http = require("http");
 const express = require("express");
-const cors = require('cors')
+const cors = require('cors');
+require("dotenv").config();
 
 const app = express();
 app.use(express.json());
@@ -17,12 +18,12 @@ if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.resolve(__dirname, 'src')))
 } else {
     // Configuring CORS
-    const corsOptions = {
+    app.use(cors({
         // Make sure origin contains the url your frontend is running on
-        origin: ['http://127.0.0.1:8080', 'http://localhost:8080', 'http://127.0.0.1:3000', 'http://localhost:3000'],
-        credentials: true
-    }
-    app.use(cors(corsOptions))
+        origin: ['*'],
+        credentials: true,
+        methods: ['GET','POST','DELETE','UPDATE','PUT','PATCH']
+    }))
 }
 
 server.listen(app.get("port"), () => {
