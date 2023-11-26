@@ -1,7 +1,7 @@
 ## Description
 This repository contains the backend code for a Node.js web application. It includes JWT authentication, CRUD operations for articles, user management, and redirection logic.
 
-# Features
+### Features
 - JWT authentication for secure access to endpoints.
 - User management including registration, login, and profile updates.
 - Article operations enabling create, read, update, and delete functionality.
