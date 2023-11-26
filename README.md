@@ -7,8 +7,8 @@ This repository contains the backend code for a Node.js web application. It incl
 - Article operations enabling create, read, update, and delete functionality.
 - Redirection handling for URL management.
 
-# Getting Started
+### Getting Started
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
-# Prerequisites
+### Prerequisites
 You need to have Node.js and npm installed on your machine.
